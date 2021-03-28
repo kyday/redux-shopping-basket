@@ -1,16 +1,27 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import CheckBox from "./CheckBox";
+import { deleteCart } from "../store/actions";
 
 export default function CartItem({
   isChecked,
   product_name,
-  product_id,
   product_img,
   price,
   idx,
-  filterItem,
 }) {
+  const cartItems = useSelector((store) => store.cartReducer);
+  const dispatch = useDispatch();
+
+  const filterItem = () => {
+    const filtered = cartItems.filter((_, i) => {
+      return i !== idx;
+    });
+    dispatch(deleteCart(filtered));
+    alert("상품이 삭제되었습니다.");
+  };
+
   return (
     <Item>
       <CheckColumn>
@@ -26,7 +37,7 @@ export default function CartItem({
       <td>1</td>
       <td>{price.toLocaleString()} 원</td>
       <td>
-        <DeleteCircle onClick={() => filterItem(idx)}>
+        <DeleteCircle onClick={filterItem}>
           <DeleteIcon />
         </DeleteCircle>
       </td>
